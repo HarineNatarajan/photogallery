@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo gallery</title>
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">
+
+    <link rel="stylesheet" href="galstyle.css">
+</head>
+<body>
+
+<div class="gallery">
+    <h1> PHOTO GALLERY</h1>
+
+    <ul class="controls">
+        <li class="buttons active" data-filter="all">all</li>
+        <li class="buttons" data-filter="bird">birds</li>
+        <li class="buttons" data-filter="cat">cat</li>
+        <li class="buttons" data-filter="dog">dog</li>
+        <div class="container">
+            <input type="file" id="fileInput" accept="image/*" style="display:none">
+            <button onclick="document.getElementById('fileInput').click()">Choose Image</button>
+            <button onclick="uploadImage()">Upload</button>
+        </div>
+    </ul>
+
+
+    
+    <div class="image-container" id="uploadedImages"></div>
+
+    <div class="image-container">
+        <a href="images/bird1.jpg" class="image bird">
+            <img src="images/bird1.jpg" alt="">
+        </a>
+        <a href="images/bird2.jpg" class="image bird">
+            <img src="images/bird2.jpg" alt="">
+        </a>
+        <a href="images/bird3.jpg" class="image bird">
+            <img src="images/bird3.jpg" alt="">
+        </a>
+        <a href="images/bird4.jpg" class="image bird">
+            <img src="images/bird4.jpg" alt="">
+        </a>
+        <a href="images/bird5.jpg" class="image bird">
+            <img src="images/bird5.jpg" alt="">
+        </a>
+        <a href="images/cat1.jpg" class="image cat">
+            <img src="images/cat1.jpg" alt="">
+        </a>
+        <a href="images/cat2.jpg" class="image cat">
+        <img src="images/cat2.jpg" alt="">
+        </a>
+        <a href="images/cat3.jpg" class="image cat">
+            <img src="images/cat3.jpg" alt="">
+            </a>
+            <a href="images/cat4.jpg" class="image cat">
+                <img src="images/cat4.jpg" alt="">
+                </a>
+                <a href="images/cat5.jpg" class="image cat">
+                    <img src="images/cat5.jpg" alt="">
+                    </a>
+        <a href="images/dog1.jpg" class="image dog">
+            <img src="images/dog1.jpg" alt="">
+        </a>
+        <a href="images/dog2.jpg" class="image dog">
+            <img src="images/dog2.jpg" alt="">
+        </a>
+        <a href="images/dog3.jpg" class="image dog">
+            <img src="images/dog3.jpg" alt="">
+        </a>
+        <a href="images/dog4.jpg" class="image dog">
+            <img src="images/dog4.jpg" alt="">
+        </a>
+        <a href="images/dog5.jpg" class="image dog">
+            <img src="images/dog5.jpg" alt="">
+        </a>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+        $('.buttons').click(function(){
+            $(this).addClass('active').siblings().removeClass('active');
+            var filter = $(this).attr('data-filter')
+            if(filter == 'all'){
+                $('.image').show(400);
+            }else{
+                $('.image').not('.'+filter).hide(200);
+                $('.image').filter('.'+filter).show(400);
+            }
+        });
+
+        $('.gallery').magnificPopup({
+            delegate:'a',
+            type:'image',
+            gallery:{
+                enabled:true
+            }
+        });
+    });
+
+    function uploadImage() {
+    const fileInput = document.getElementById('fileInput');
+    const uploadedImagesContainer = document.getElementById('uploadedImages');
+
+    const files = fileInput.files;
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (file.type.match('image.*')) {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                const img = document.createElement('img');
+                img.src = event.target.result;
+                const imageItem = document.createElement('div');
+                imageItem.classList.add('image-item');
+                imageItem.appendChild(img);
+
+                uploadedImagesContainer.appendChild(imageItem);
+
+                saveImageLocally(event.target.result);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            alert('Please select an image file (jpg, png, etc.).');
+        }
+    }
+}
+
+function saveImageLocally(imageData) {
+    let savedImages = JSON.parse(localStorage.getItem('savedImages')) || [];
+    savedImages.push(imageData);
+    localStorage.setItem('savedImages', JSON.stringify(savedImages));
+}
+
+</script>
+    
+</body>
+</html>
